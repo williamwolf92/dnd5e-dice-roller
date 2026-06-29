@@ -1161,6 +1161,72 @@
   .cr-delete-btn:active {
     background-color: #cc0000;
   }
+
+  /* ── History Modal ──────────────────────────────────── */
+  #hist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  #hist-empty-msg {
+    text-align: center;
+    color: #b0a090;
+    font-style: italic;
+    font-size: 14px;
+    padding: 16px 0;
+  }
+
+  .hist-item {
+    background-color: #ffffff;
+    border: 1px solid #e6ddcf;
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .hist-item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .hist-total {
+    font-size: 17px;
+    font-weight: 700;
+    color: #2b2b2b;
+  }
+
+  .hist-time {
+    font-size: 12px;
+    color: #b0a090;
+    flex-shrink: 0;
+  }
+
+  .hist-detail {
+    font-size: 12px;
+    color: #7a6e62;
+    word-break: break-word;
+  }
+
+  #hist-clear-btn {
+    border: 1px solid #c9bda8;
+    background-color: #efe7d8;
+    color: #3a3a3a;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 10px;
+    touch-action: manipulation;
+    font-family: Georgia;
+  }
+
+  #hist-clear-btn:active {
+    background-color: #e0d5c0;
+  }
 </style>
 
 <!-- JSON-LD Structured Data -->
@@ -1290,6 +1356,7 @@
         <button class="float-btn" id="color-btn" title="Dice Color">🎨</button>
         <button class="float-btn" id="skills-btn" title="Skills">⭐️</button>
         <button class="float-btn" id="savedrolls-btn" title="Saved Rolls">🎲</button>
+        <button class="float-btn" id="history-btn" title="History">📋</button>
         <button class="float-btn" id="physics-btn" title="Physics">⚙️</button>
         <button class="float-btn" id="info-btn" title="Information">ℹ️</button>
       </div>
@@ -1783,6 +1850,20 @@
     </div>
   </div>
 
+  <!-- ── History Modal ─────────────────────────────────────────── -->
+  <div class="modal-overlay" id="history-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title">📋 Roll History</span>
+        <button id="hist-clear-btn">Clear</button>
+        <button class="modal-close" data-modal="history-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="hist-list"></div>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import DiceBox from "https://unpkg.com/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
 
@@ -1834,6 +1915,7 @@
         skillProficiency,
         profBonus,
         customRolls,
+        rollHistory,
         counts,
         modifier: parseInt(document.getElementById("mod-value").textContent, 10),
       };
@@ -2426,6 +2508,7 @@
       resultDetail.textContent = detailParts.join("   |   ");
       resultPanel.classList.add("show");
       updateNatToast(natValue);
+      addToHistory(`Total: ${total}`, detailParts.join("   |   "));
     }
 
     // ── Roll ──────────────────────────────────────────────────────────────────
@@ -2490,6 +2573,50 @@
       document.querySelectorAll(".die-count").forEach(el => { el.textContent = "0"; });
       modValueEl.textContent = "0";
       saveState();
+    });
+
+    // ── Roll History ──────────────────────────────────────────────────────────
+    let rollHistory = Array.isArray(savedState.rollHistory) ? savedState.rollHistory : [];
+
+    function addToHistory(totalText, detailText) {
+      const now = new Date();
+      const hh  = String(now.getHours()).padStart(2, "0");
+      const mm  = String(now.getMinutes()).padStart(2, "0");
+      rollHistory.unshift({ time: `${hh}:${mm}`, total: totalText, detail: detailText });
+      if (rollHistory.length > 10) rollHistory.length = 10;
+      saveState();
+    }
+
+    function renderHistory() {
+      const list = document.getElementById("hist-list");
+      list.innerHTML = "";
+      if (rollHistory.length === 0) {
+        list.innerHTML = '<div id="hist-empty-msg">No rolls yet.</div>';
+        return;
+      }
+      rollHistory.forEach(entry => {
+        const item = document.createElement("div");
+        item.className = "hist-item";
+        item.innerHTML = `
+          <div class="hist-item-top">
+            <span class="hist-total">${entry.total}</span>
+            <span class="hist-time">${entry.time}</span>
+          </div>
+          <div class="hist-detail">${entry.detail}</div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    document.getElementById("history-btn").addEventListener("click", () => {
+      renderHistory();
+      openModal("history-modal");
+    });
+
+    document.getElementById("hist-clear-btn").addEventListener("click", () => {
+      rollHistory = [];
+      saveState();
+      renderHistory();
     });
 
     // ── Custom Rolls ──────────────────────────────────────────────────────────
