@@ -2470,7 +2470,7 @@
         total          = rolled + modifier;
         natValue       = rolled;
         const sign     = modifier >= 0 ? "+" : "";
-        detailParts    = [`${pendingLabel} check: ${rolled} (${sign}${modifier})`];
+        detailParts    = [`${pendingLabel}: ${rolled} (${sign}${modifier})`];
       } else if (mode === "labeled-advantage" || mode === "labeled-disadvantage") {
         const values = groups[20] || [];
         const chosen = mode === "labeled-advantage" ? Math.max(...values) : Math.min(...values);
@@ -2478,7 +2478,7 @@
         natValue = chosen;
         const tag  = mode === "labeled-advantage" ? "Adv" : "Dis";
         const sign = modifier >= 0 ? "+" : "";
-        detailParts = [`${pendingLabel} check [${tag}]: ${values.join("/")} – ${chosen} (${sign}${modifier})`];
+        detailParts = [`${pendingLabel} [${tag}]: ${values.join("/")} – ${chosen} (${sign}${modifier})`];
       } else if (mode === "percentile") {
         const d100Values = groups[100] || [];
         const value      = (d100Values[0] === 0) ? 100 : (d100Values[0] ?? 100);
