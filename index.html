@@ -137,7 +137,7 @@
     font-weight: 700;
     font-size: 18px;
     text-align: center;
-    width: 75%;
+    width: 90%;
     z-index: 1;
     pointer-events: none;
   }
@@ -399,7 +399,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 6px;
+    gap: 2px;
     flex-shrink: 0;
   }
 
@@ -1259,7 +1259,7 @@
   <div id="app">
     <div id="dice-box-wrapper">
       <div id="dice-box"></div>
-      <div id="empty-message">The d20 is cursed, tap "Roll" at your own risk.</div>
+      <div id="empty-message">WELCOME!<br><br>Select your dices and tap "Roll".</div>
       <div id="result-panel">
         <div id="result-total"></div>
         <div id="result-detail"></div>
@@ -1354,6 +1354,7 @@
       <!-- Floating config buttons -->
       <div id="float-buttons">
         <button class="float-btn" id="color-btn" title="Dice Color">🎨</button>
+        <button class="float-btn" id="character-btn" title="Character">👤</button>
         <button class="float-btn" id="skills-btn" title="Skills">⭐️</button>
         <button class="float-btn" id="savedrolls-btn" title="Saved Rolls">🎲</button>
         <button class="float-btn" id="history-btn" title="History">📋</button>
