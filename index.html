@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <title>D&amp;D 5e Dice Roller</title>
 
-<!-- SEO and Discovery -->
+<!-- SEO & Discovery -->
 <meta name="description" content="D&amp;D 5e Dice Roller: a free browser-based 3D dice simulator for D&amp;D and tabletop RPGs. Roll d4, d6, d8, d10, d12, d20 and d100 with realistic physics. Supports advantage, disadvantage, skills, saving throws and custom rolls.">
 <meta name="keywords" content="D&D dice roller, 3D dice, tabletop RPG, dungeons and dragons, d20, dice simulator, TTRPG, dice physics, dice box, online dice, RPG tools, 3d20, percentile dice">
 <meta name="author" content="williamwolf92">
@@ -1355,6 +1355,7 @@
       <!-- Floating config buttons -->
       <div id="float-buttons">
         <button class="float-btn" id="color-btn" title="Dice Color">🎨</button>
+        <button class="float-btn" id="character-btn" title="Character">👤</button>
         <button class="float-btn" id="skills-btn" title="Skills">⭐️</button>
         <button class="float-btn" id="savedrolls-btn" title="Saved Rolls">🎲</button>
         <button class="float-btn" id="history-btn" title="History">📋</button>
@@ -1979,6 +1980,8 @@
     let settingsChanged = false;
 
     // ── DiceBox factory & init ────────────────────────────────────────────────
+    const themeBase = new URL("themes/", window.location.href).href;
+    
     function makeDiceBox() {
       return new DiceBox({
         container: "#dice-box",
@@ -1986,15 +1989,15 @@
         origin:    "https://unpkg.com/@3d-dice/dice-box@1.1.4/dist/",
         theme:     diceSettings.theme || "smooth",
         externalThemes: {
-          amber:      "https://cdn.jsdelivr.net/gh/williamwolf92/dnd5e-dice-roller@main/themes/amber/",
-          amethyst:   "https://cdn.jsdelivr.net/gh/williamwolf92/dnd5e-dice-roller@main/themes/amethyst/",
-         aquamarine: "https://cdn.jsdelivr.net/gh/williamwolf92/dnd5e-dice-roller@main/themes/aquamarine",
-          diamond:    "https://cdn.jsdelivr.net/gh/williamwolf92/dnd5e-dice-roller@main/themes/diamond",
-          emerald:    "https://cdn.jsdelivr.net/gh/williamwolf92/dnd5e-dice-roller@main/themes/emerald/",
-          onyx:       "https://cdn.jsdelivr.net/gh/williamwolf92/dnd5e-dice-roller@main/themes/onyx/",
-          ruby:       "https://cdn.jsdelivr.net/gh/williamwolf92/dnd5e-dice-roller@main/themes/ruby/",
-          sapphire:   "https://cdn.jsdelivr.net/gh/williamwolf92/dnd5e-dice-roller@main/themes/sapphire",
-          smooth:     "https://cdn.jsdelivr.net/gh/williamwolf92/dnd5e-dice-roller@main/themes/smooth/"
+          amber:      themeBase + "amber/",
+          amethyst:   themeBase + "amethyst/",
+         aquamarine: themeBase + "aquamarine/",
+          diamond:    themeBase + "diamond/",
+          emerald:    themeBase + "emerald/",
+          onyx:       themeBase + "onyx/",
+          ruby:       themeBase + "ruby/",
+          sapphire:   themeBase + "sapphire/",
+          smooth:     themeBase + "smooth/"
         },
         themeColor:     diceSettings.themeColor,
         delay:          100,
