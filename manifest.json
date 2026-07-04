@@ -1,7 +1,7 @@
 {
   "id": "/dnd5e-dice-roller/",
-  "name": "D&D 5e Dice Roller",
-  "short_name": "D&D 5e Dice Roller",
+  "name": "D&D Dice Roller",
+  "short_name": "D&D Dice Roller",
   "description": "A free browser-based 3D dice simulator for D&amp;D and tabletop RPGs. Roll d4, d6, d8, d10, d12, d20 and d100 with realistic physics.",
   "start_url": "/dnd5e-dice-roller/",
   "scope": "/dnd5e-dice-roller/",
