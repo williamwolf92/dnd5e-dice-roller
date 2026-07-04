@@ -699,49 +699,315 @@
     margin-bottom: 5px;
   }
 
-  .prof-bonus-control {
+  /* ── CharacterSheet: Name / Level / HP row ──────────────── */
+  .charsheet-row {
     display: flex;
-    border: 1px dashed #2b2b2b;
-    border-radius: 5px;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 5px;
-    margin-bottom: 5px;
+    gap: 10px;
+    margin-bottom: 10px;
   }
 
-  .prof-bonus-label {
+  .charsheet-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .charsheet-field.full {
+    width: 100%;
+  }
+
+  .charsheet-field.half {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .charsheet-label {
     font-size: 16px;
     font-weight: 700;
     color: #5c3d1e;
   }
 
-  #prof-bonus-value {
-    font-size: 16px;
-    font-weight: 700;
+  .charsheet-input {
+    border: 1px solid #c9bda8;
+    border-radius: 8px;
+    background: #ffffff;
     color: #2b2b2b;
-    min-width: 22px;
-    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    width: 100%;
   }
 
-  .prof-bonus-btn {
-    width: 20px;
-    height: 20px;
+  .charsheet-input:focus {
+    outline: none;
+    border-color: #5c3d1e;
+  }
+
+  .charsheet-input::placeholder {
+    color: #b0a090;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* HP / HP max combined field */
+  .hp-combo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .hp-btn {
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: none;
     background-color: #2b2b2b;
     color: #ffffff;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
     touch-action: manipulation;
     padding: 0;
-    line-height: 1;
+    flex-shrink: 0;
   }
 
-  .prof-bonus-btn:active {
+  .hp-btn:active {
     background-color: #555555;
+  }
+
+  .hp-display {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background-color: #ffffff;
+    border: 1px solid #e6ddcf;
+    border-radius: 8px;
+    padding: 8px 4px;
+  }
+
+  .hp-current {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2b2b2b;
+    background: none;
+    border: none;
+    padding: 0;
+    min-width: 18px;
+    text-align: right;
+    touch-action: manipulation;
+  }
+
+  .hp-current:active {
+    opacity: 0.6;
+  }
+
+  .hp-slash {
+    font-size: 16px;
+    font-weight: 700;
+    color: #9b8f7e;
+  }
+
+  .hp-max-input {
+    width: 34px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 700;
+    color: #2b2b2b;
+    text-align: left;
+    padding: 0;
+  }
+
+  .hp-max-input:focus {
+    outline: none;
+  }
+
+  .hp-max-input::-webkit-inner-spin-button,
+  .hp-max-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* ── CharacterSheet: stat cards (AC / Init / Speed / Passive P. / Prof. Bonus / Hit Dice) ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+
+  .stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #e6ddcf;
+    border-radius: 10px;
+    padding: 7px 5px;
+    gap: 5px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #7a6e62;
+    text-align: center;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .stat-label.clickable {
+    touch-action: manipulation;
+  }
+
+  .stat-label.clickable:active {
+    opacity: 0.6;
+  }
+
+  .stat-value-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2b2b2b;
+    min-width: 24px;
+    text-align: center;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .stat-value.clickable {
+    touch-action: manipulation;
+  }
+
+  .stat-value.clickable:active {
+    opacity: 0.6;
+  }
+
+  .hitdice-type-btn {
+    font-size: 11px;
+    font-weight: 700;
+    color: #5c3d1e;
+    background-color: #faf6ef;
+    border: 1px solid #c9bda8;
+    border-radius: 6px;
+    padding: 2px 8px;
+    touch-action: manipulation;
+  }
+
+  .hitdice-type-btn:active {
+    background-color: #efe7d8;
+  }
+
+  /* ── HP mini modal ───────────────────────────────────────── */
+  #hp-mini-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background-color: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  #hp-mini-backdrop.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #hp-mini-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.88);
+    background-color: rgba(250, 246, 239, 0.97);
+    border-radius: 18px;
+    padding: 18px 22px 20px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.55);
+    z-index: 151;
+    text-align: center;
+    width: 260px;
+    max-width: 84%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  #hp-mini-modal.show {
+    opacity: 1;
+    pointer-events: all;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  #hp-mini-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2b2b2b;
+    margin-bottom: 12px;
+  }
+
+  #hp-mini-input {
+    width: 100%;
+    border: 1px solid #c9bda8;
+    border-radius: 8px;
+    background-color: #faf6ef;
+    color: #2b2b2b;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    padding: 8px 10px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+
+  #hp-mini-input:focus {
+    outline: none;
+    border-color: #5c3d1e;
+  }
+
+  #hp-mini-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .hp-mini-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 18px;
+    font-weight: 700;
+    touch-action: manipulation;
+  }
+
+  #hp-mini-minus {
+    background-color: #b10000;
+    color: #ffffff;
+  }
+
+  #hp-mini-minus:active {
+    background-color: #8a0000;
+  }
+
+  #hp-mini-plus {
+    background-color: #007f27;
+    color: #ffffff;
+  }
+
+  #hp-mini-plus:active {
+    background-color: #005e1c;
   }
 
   /* Habilidades */
@@ -1355,8 +1621,7 @@
       <!-- Floating config buttons -->
       <div id="float-buttons">
         <button class="float-btn" id="color-btn" title="Dice Color">🎨</button>
-        <button class="float-btn" id="character-btn" title="Character">👤</button>
-        <button class="float-btn" id="skills-btn" title="Skills">⭐️</button>
+        <button class="float-btn" id="skills-btn" title="Character Sheet">👤</button>
         <button class="float-btn" id="savedrolls-btn" title="Saved Rolls">🎲</button>
         <button class="float-btn" id="history-btn" title="History">📋</button>
         <button class="float-btn" id="physics-btn" title="Physics">⚙️</button>
@@ -1488,22 +1753,100 @@
   <div class="modal-overlay" id="skills-modal">
     <div class="modal-box">
       <div class="modal-header">
-        <span class="modal-title">⭐️ Skills and Proficiencies</span>
+        <span class="modal-title">👤 Character Sheet</span>
         <button class="modal-close" data-modal="skills-modal">✕</button>
       </div>
       <div class="modal-body">
 
-        <!-- Sección 1: Habilidades -->
+        <!-- Sección 0a: Name -->
         <div class="skills-section">
-          <div class="skills-section-title-row">
-            <span class="skills-section-title">Abilities</span>
-            <div class="prof-bonus-control">
-              <span class="prof-bonus-label">Prof. Bonus:</span>
-              <button class="prof-bonus-btn" id="prof-bonus-minus">-</button>
-              <span id="prof-bonus-value">+2</span>
-              <button class="prof-bonus-btn" id="prof-bonus-plus">+</button>
+          <div class="charsheet-field full">
+            <span class="charsheet-label">Name</span>
+            <input type="text" id="char-name-input" class="charsheet-input" placeholder="Character name">
+          </div>
+        </div>
+
+        <!-- Sección 0b: Level / HP / HP máximo -->
+        <div class="skills-section">
+          <div class="charsheet-row">
+            <div class="charsheet-field half">
+              <span class="charsheet-label">Level</span>
+              <input type="number" id="char-level-input" class="charsheet-input" min="1" value="1">
+            </div>
+            <div class="charsheet-field half">
+              <span class="charsheet-label">HP</span>
+              <div class="hp-combo">
+                <button class="hp-btn" id="hp-minus">-</button>
+                <div class="hp-display">
+                  <button class="hp-current" id="hp-current">0</button>
+                  <span class="hp-slash">/</span>
+                  <input type="number" id="hp-max-input" class="hp-max-input" min="0" value="0">
+                </div>
+                <button class="hp-btn" id="hp-plus">+</button>
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- Sección 1: AC / Initiative / Speed / Passive P. / Prof. Bonus / Hit Dice -->
+        <div class="skills-section">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">AC</div>
+              <div class="stat-value-row">
+                <button class="ability-btn-small" id="ac-minus">-</button>
+                <div class="stat-value" id="ac-value">10</div>
+                <button class="ability-btn-small" id="ac-plus">+</button>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Initiative</div>
+              <div class="stat-value-row">
+                <button class="ability-btn-small" id="init-minus">-</button>
+                <button class="stat-value clickable" id="init-value">+0</button>
+                <button class="ability-btn-small" id="init-plus">+</button>
+              </div>
+            </div>
+            <div class="stat-card">
+              <button class="stat-label clickable" id="speed-label">Speed</button>
+              <div class="stat-value-row">
+                <button class="ability-btn-small" id="speed-minus">-</button>
+                <div class="stat-value" id="speed-value">30</div>
+                <button class="ability-btn-small" id="speed-plus">+</button>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Passive P.</div>
+              <div class="stat-value-row">
+                <button class="ability-btn-small" id="pp-minus">-</button>
+                <div class="stat-value" id="pp-value">10</div>
+                <button class="ability-btn-small" id="pp-plus">+</button>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Prof. Bonus</div>
+              <div class="stat-value-row">
+                <button class="ability-btn-small" id="prof-bonus-minus">-</button>
+                <div class="stat-value" id="prof-bonus-value">+2</div>
+                <button class="ability-btn-small" id="prof-bonus-plus">+</button>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Hit Dice
+                <button class="hitdice-type-btn" id="hitdice-type">d8</button>
+              </div>
+              <div class="stat-value-row">
+                <button class="ability-btn-small" id="hitdice-minus">-</button>
+                <button class="stat-value clickable" id="hitdice-value">1</button>
+                <button class="ability-btn-small" id="hitdice-plus">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 2: Habilidades -->
+        <div class="skills-section">
+          <div class="skills-section-title">Abilities</div>
           <div class="ability-grid">
             <div class="ability-card" data-ability="STR">
               <div class="ability-label">STR</div>
@@ -1562,7 +1905,7 @@
           </div>
         </div>
 
-        <!-- Sección 2: Tiradas de salvación -->
+        <!-- Sección 3: Tiradas de salvación -->
         <div class="skills-section">
           <div class="skills-section-title">Saving Throws</div>
           <div class="save-grid">
@@ -1599,7 +1942,7 @@
           </div>
         </div>
 
-        <!-- Sección 3: Skills -->
+        <!-- Sección 4: Skills -->
         <div class="skills-section">
           <div class="skills-section-title">Skills</div>
           <div class="skills-columns">
@@ -1866,6 +2209,17 @@
     </div>
   </div>
 
+  <!-- ── HP mini modal (floating) ────────────────────────────── -->
+  <div id="hp-mini-backdrop"></div>
+  <div id="hp-mini-modal">
+    <div id="hp-mini-title">Adjust HP</div>
+    <input type="number" id="hp-mini-input" value="1" min="0">
+    <div id="hp-mini-buttons">
+      <button class="hp-mini-btn" id="hp-mini-minus">-</button>
+      <button class="hp-mini-btn" id="hp-mini-plus">+</button>
+    </div>
+  </div>
+
   <script type="module">
     import DiceBox from "https://unpkg.com/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
 
@@ -1920,6 +2274,17 @@
         rollHistory,
         counts,
         modifier: parseInt(document.getElementById("mod-value").textContent, 10),
+        charName,
+        charLevel,
+        hp,
+        hpMax,
+        ac,
+        initiative,
+        speedValues,
+        activeSpeedLabel,
+        passivePerception,
+        hitDiceType,
+        hitDiceCurrent,
       };
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -2194,6 +2559,24 @@
       ? savedState.profBonus
       : 2;
 
+    // ── CharacterSheet: core stats ─────────────────────────────────────────
+    let charName  = savedState.charName || "";
+    let charLevel = (savedState.charLevel != null && savedState.charLevel >= 1) ? savedState.charLevel : 1;
+    let hp        = savedState.hp != null ? savedState.hp : 0;
+    let hpMax     = savedState.hpMax != null ? savedState.hpMax : 0;
+    let ac        = savedState.ac != null ? savedState.ac : 10;
+    let initiative = savedState.initiative != null ? savedState.initiative : 0;
+
+    const SPEED_LABELS = ["Speed", "Fly", "Climb", "Swim", "Burrow"];
+    const speedValues = Object.assign({ Speed: 30, Fly: 0, Climb: 0, Swim: 0, Burrow: 0 }, savedState.speedValues || {});
+    let activeSpeedLabel = SPEED_LABELS.includes(savedState.activeSpeedLabel) ? savedState.activeSpeedLabel : "Speed";
+
+    let passivePerception = savedState.passivePerception != null ? savedState.passivePerception : 10;
+
+    const HITDICE_TYPES = ["d6", "d8", "d10", "d12"];
+    let hitDiceType    = HITDICE_TYPES.includes(savedState.hitDiceType) ? savedState.hitDiceType : "d8";
+    let hitDiceCurrent = savedState.hitDiceCurrent != null ? savedState.hitDiceCurrent : charLevel;
+
     const SKILLS = [
       { id: "athletics",     name: "Athletics check",       ability: "STR" },
       { id: "acrobatics",    name: "Acrobatics check",      ability: "DEX" },
@@ -2256,9 +2639,230 @@
       if (state === "E") btn.classList.add("state-e");
     }
 
+    // ── CharacterSheet: render functions ────────────────────────────────────
+    function renderCharName() {
+      document.getElementById("char-name-input").value = charName;
+    }
+
+    function clampHitDice() {
+      if (hitDiceCurrent > charLevel) hitDiceCurrent = charLevel;
+      if (hitDiceCurrent < 0) hitDiceCurrent = 0;
+    }
+
+    function renderCharLevel() {
+      document.getElementById("char-level-input").value = charLevel;
+      clampHitDice();
+      renderHitDice();
+    }
+
+    function renderHP() {
+      document.getElementById("hp-current").textContent = hp;
+      document.getElementById("hp-max-input").value = hpMax;
+    }
+
+    function renderAC() {
+      document.getElementById("ac-value").textContent = ac;
+    }
+
+    function renderInitiative() {
+      document.getElementById("init-value").textContent = formatMod(initiative);
+    }
+
+    function renderSpeed() {
+      document.getElementById("speed-label").textContent = activeSpeedLabel;
+      document.getElementById("speed-value").textContent = speedValues[activeSpeedLabel];
+    }
+
+    function renderPassivePerception() {
+      document.getElementById("pp-value").textContent = passivePerception;
+    }
+
+    function renderHitDice() {
+      document.getElementById("hitdice-value").textContent = hitDiceCurrent;
+      document.getElementById("hitdice-type").textContent  = hitDiceType;
+    }
+
+    // Name / Level
+    document.getElementById("char-name-input").addEventListener("input", (e) => {
+      charName = e.target.value;
+      saveState();
+    });
+
+    document.getElementById("char-level-input").addEventListener("input", (e) => {
+      let v = parseInt(e.target.value, 10);
+      if (isNaN(v) || v < 1) v = 1;
+      charLevel = v;
+      clampHitDice();
+      renderHitDice();
+      saveState();
+    });
+    document.getElementById("char-level-input").addEventListener("blur", (e) => {
+      e.target.value = charLevel;
+    });
+
+    // HP / HP max
+    document.getElementById("hp-max-input").addEventListener("input", (e) => {
+      let v = parseInt(e.target.value, 10);
+      if (isNaN(v) || v < 0) v = 0;
+      hpMax = v;
+      if (hp > hpMax) hp = hpMax;
+      document.getElementById("hp-current").textContent = hp;
+      saveState();
+    });
+    document.getElementById("hp-max-input").addEventListener("blur", (e) => {
+      e.target.value = hpMax;
+    });
+
+    document.getElementById("hp-minus").addEventListener("click", () => {
+      hp = Math.max(0, hp - 1);
+      renderHP();
+      saveState();
+    });
+    document.getElementById("hp-plus").addEventListener("click", () => {
+      hp = Math.min(hpMax, hp + 1);
+      renderHP();
+      saveState();
+    });
+
+    // HP mini modal (floating +/- adjuster)
+    function openHpMiniModal() {
+      document.getElementById("hp-mini-input").value = 1;
+      document.getElementById("hp-mini-modal").classList.add("show");
+      document.getElementById("hp-mini-backdrop").classList.add("show");
+    }
+    function closeHpMiniModal() {
+      document.getElementById("hp-mini-modal").classList.remove("show");
+      document.getElementById("hp-mini-backdrop").classList.remove("show");
+    }
+
+    document.getElementById("hp-current").addEventListener("click", openHpMiniModal);
+    document.getElementById("hp-mini-backdrop").addEventListener("click", closeHpMiniModal);
+
+    document.getElementById("hp-mini-minus").addEventListener("click", () => {
+      const v = parseInt(document.getElementById("hp-mini-input").value, 10) || 0;
+      hp = Math.max(0, hp - v);
+      renderHP();
+      saveState();
+      closeHpMiniModal();
+    });
+    document.getElementById("hp-mini-plus").addEventListener("click", () => {
+      const v = parseInt(document.getElementById("hp-mini-input").value, 10) || 0;
+      hp = Math.min(hpMax, hp + v);
+      renderHP();
+      saveState();
+      closeHpMiniModal();
+    });
+
+    // AC
+    document.getElementById("ac-minus").addEventListener("click", () => {
+      ac--;
+      renderAC();
+      saveState();
+    });
+    document.getElementById("ac-plus").addEventListener("click", () => {
+      ac++;
+      renderAC();
+      saveState();
+    });
+
+    // Initiative
+    document.getElementById("init-minus").addEventListener("click", () => {
+      if (initiative > -10) {
+        initiative--;
+        renderInitiative();
+        saveState();
+      }
+    });
+    document.getElementById("init-plus").addEventListener("click", () => {
+      if (initiative < 10) {
+        initiative++;
+        renderInitiative();
+        saveState();
+      }
+    });
+    document.getElementById("init-value").addEventListener("click", () => {
+      closeModal("skills-modal");
+      rollWithLabel("Initiative", initiative);
+    });
+
+    // Speed (cycles Speed / Fly / Climb / Swim / Burrow)
+    document.getElementById("speed-label").addEventListener("click", () => {
+      const idx = SPEED_LABELS.indexOf(activeSpeedLabel);
+      activeSpeedLabel = SPEED_LABELS[(idx + 1) % SPEED_LABELS.length];
+      renderSpeed();
+      saveState();
+    });
+    document.getElementById("speed-minus").addEventListener("click", () => {
+      speedValues[activeSpeedLabel] = Math.max(0, speedValues[activeSpeedLabel] - 5);
+      renderSpeed();
+      saveState();
+    });
+    document.getElementById("speed-plus").addEventListener("click", () => {
+      speedValues[activeSpeedLabel] += 5;
+      renderSpeed();
+      saveState();
+    });
+
+    // Passive Perception
+    document.getElementById("pp-minus").addEventListener("click", () => {
+      if (passivePerception > 0) passivePerception--;
+      renderPassivePerception();
+      saveState();
+    });
+    document.getElementById("pp-plus").addEventListener("click", () => {
+      passivePerception++;
+      renderPassivePerception();
+      saveState();
+    });
+
+    // Hit Dice
+    document.getElementById("hitdice-minus").addEventListener("click", () => {
+      if (hitDiceCurrent > 0) {
+        hitDiceCurrent--;
+        renderHitDice();
+        saveState();
+      }
+    });
+    document.getElementById("hitdice-plus").addEventListener("click", () => {
+      if (hitDiceCurrent < charLevel) {
+        hitDiceCurrent++;
+        renderHitDice();
+        saveState();
+      }
+    });
+    document.getElementById("hitdice-type").addEventListener("click", () => {
+      const idx = HITDICE_TYPES.indexOf(hitDiceType);
+      hitDiceType = HITDICE_TYPES[(idx + 1) % HITDICE_TYPES.length];
+      renderHitDice();
+      saveState();
+    });
+    document.getElementById("hitdice-value").addEventListener("click", () => {
+      if (!ready || hitDiceCurrent <= 0) return;
+      hitDiceCurrent--;
+      renderHitDice();
+      saveState();
+      closeModal("skills-modal");
+      const sides = parseInt(hitDiceType.slice(1), 10);
+      pendingMode     = "hitdice";
+      pendingModifier = getAbilityMod("CON");
+      emptyMessage.style.display = "none";
+      resultPanel.classList.remove("show");
+      natToast.classList.remove("show");
+      diceBox.clear();
+      diceBox.roll([{ qty: 1, sides }]);
+    });
+
     // Initial render
     ABILITIES.forEach(renderAbility);
     SKILLS.forEach(s => updateSkillToggleUI(s.id));
+    renderCharName();
+    renderCharLevel();
+    renderHP();
+    renderAC();
+    renderInitiative();
+    renderSpeed();
+    renderPassivePerception();
+    renderHitDice();
 
     // Prof. Bonus control
     function renderProfBonus() {
@@ -2491,6 +3095,16 @@
         const unitsVal   = isHundred ? 0 : total % 10;
         const tensDisplay = String(tensVal).padStart(2, "0");
         detailParts      = [`Percentile: ${tensDisplay} + ${unitsVal}`];
+      } else if (mode === "hitdice") {
+        const sidesKey = Object.keys(groups)[0];
+        const rolled   = groups[sidesKey][0];
+        const healed   = rolled + modifier;
+        hp = Math.max(0, Math.min(hpMax, hp + healed));
+        renderHP();
+        saveState();
+        total      = healed;
+        const sign = modifier >= 0 ? "+" : "";
+        detailParts = [`Hit Dice (d${sidesKey}): ${rolled} (${sign}${modifier} CON) → HP ${hp}/${hpMax}`];
       } else {
         Object.keys(groups).forEach(sides => {
           groups[sides].forEach(value => { total += value; });
