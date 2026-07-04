@@ -3104,7 +3104,7 @@
         saveState();
         total      = healed;
         const sign = modifier >= 0 ? "+" : "";
-        detailParts = [`Hit Dice (d${sidesKey}): ${rolled} (${sign}${modifier} CON) → HP ${hp}/${hpMax}`];
+        detailParts = [`Hit Dice (d${sidesKey}): ${rolled} (${sign}${modifier} CON) – HP ${hp}/${hpMax}`];
       } else {
         Object.keys(groups).forEach(sides => {
           groups[sides].forEach(value => { total += value; });
