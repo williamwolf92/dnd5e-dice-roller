@@ -987,7 +987,7 @@
     padding: 10px;
     border-radius: 10px;
     border: none;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
     touch-action: manipulation;
   }
@@ -2230,10 +2230,10 @@
   <div id="hp-mini-backdrop"></div>
   <div id="hp-mini-modal">
     <div id="hp-mini-title">Adjust HP</div>
-    <input type="number" id="hp-mini-input" value="1" min="0">
+    <input type="number" id="hp-mini-input" min="0">
     <div id="hp-mini-buttons">
-      <button class="hp-mini-btn" id="hp-mini-minus">-</button>
-      <button class="hp-mini-btn" id="hp-mini-plus">+</button>
+      <button class="hp-mini-btn" id="hp-mini-minus">Damage</button>
+      <button class="hp-mini-btn" id="hp-mini-plus">Heal</button>
     </div>
   </div>
 
@@ -2743,7 +2743,7 @@
 
     // HP mini modal (floating +/- adjuster)
     function openHpMiniModal() {
-      document.getElementById("hp-mini-input").value = 1;
+      document.getElementById("hp-mini-input").value = "";
       document.getElementById("hp-mini-modal").classList.add("show");
       document.getElementById("hp-mini-backdrop").classList.add("show");
     }
