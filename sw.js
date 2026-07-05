@@ -1,52 +1,156 @@
-const CACHE_NAME = "dnd-dice-roller-v1";
+// sw.js — D&D Dice Roller offline support
+// Sube la versión cada vez que cambies archivos del shell para forzar refresco.
+const CACHE_VERSION  = "v1";
+const PRECACHE_NAME  = `ddr-precache-${CACHE_VERSION}`;
+const RUNTIME_NAME    = `ddr-runtime-${CACHE_VERSION}`;
 
-// Archivos base que se guardan para que la app abra offline.
-// Agrega aquí cualquier otro archivo local que uses (css, js, modelos 3d, etc).
-const CORE_ASSETS = [
-  "/dnd5e-dice-roller/",
-  "/dnd5e-dice-roller/index.html",
-  "/dnd5e-dice-roller/manifest.json",
-  "/dnd5e-dice-roller/assets/icon.png",
-  "/dnd5e-dice-roller/assets/wood-bg.jpg"
+// Archivos "core" que sabemos que existen y que la app necesita desde el primer instante.
+// Si alguno no existe (404), no rompe la instalación gracias a la carga individual con allSettled.
+const PRECACHE_URLS = [
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./info.html",
+  "./assets/icon.png",
+  "./assets/icon-192.png",
+  "./assets/icon-256.png",
+  "./assets/icon-512.png",
+  "./assets/icon-maskable.png",
+  "./assets/wood-bg.jpg",
+  "./assets/nat-text.json",
+  "./themes/smooth/diffuse-dark.png",
+  "./themes/smooth/diffuse-light.png",
+  "./themes/smooth/normal.png",
+  "./themes/smooth/smoothDice.json",
+  "./themes/smooth/theme.config.json",
+  "./themes/amber/diffuse.jpg",
+  "./themes/amber/normal.png",
+  "./themes/amber/roughness.png",
+  "./themes/amber/smoothDice.json",
+  "./themes/amber/theme.config.json",
+  "./themes/amethyst/diffuse.jpg",
+  "./themes/amethyst/normal.png",
+  "./themes/amethyst/roughness.png",
+  "./themes/amethyst/smoothDice.json",
+  "./themes/amethyst/theme.config.json",
+  "./themes/aquamarine/diffuse.jpg",
+  "./themes/aquamarine/normal.png",
+  "./themes/aquamarine/roughness.png",
+  "./themes/aquamarine/smoothDice.json",
+  "./themes/aquamarine/theme.config.json",
+  "./themes/diamond/diffuse.jpg",
+  "./themes/diamond/normal.png",
+  "./themes/diamond/roughness.png",
+  "./themes/diamond/smoothDice.json",
+  "./themes/diamond/theme.config.json",
+  "./themes/emerald/diffuse.jpg",
+  "./themes/emerald/normal.png",
+  "./themes/emerald/roughness.png",
+  "./themes/emerald/smoothDice.json",
+  "./themes/emerald/theme.config.json",
+  "./themes/onyx/diffuse.jpg",
+  "./themes/onyx/normal.png",
+  "./themes/onyx/roughness.png",
+  "./themes/onyx/smoothDice.json",
+  "./themes/onyx/theme.config.json",
+  "./themes/ruby/diffuse.jpg",
+  "./themes/ruby/normal.png",
+  "./themes/ruby/roughness.png",
+  "./themes/ruby/smoothDice.json",
+  "./themes/ruby/theme.config.json",
+  "./themes/sapphire/diffuse.jpg",
+  "./themes/sapphire/normal.png",
+  "./themes/sapphire/roughness.png",
+  "./themes/sapphire/smoothDice.json",
+  "./themes/sapphire/theme.config.json",
 ];
 
-// Instala el service worker y precarga los archivos base
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
+    (async () => {
+      const cache = await caches.open(PRECACHE_NAME);
+      // allSettled: si un archivo no existe o falla, no cancela la instalación completa.
+      await Promise.allSettled(
+        PRECACHE_URLS.map((url) =>
+          cache.add(url).catch((err) => console.warn("No se pudo precachear:", url, err))
+        )
+      );
+      await self.skipWaiting();
+    })()
   );
-  self.skipWaiting();
 });
 
-// Limpia caches viejos cuando se activa una nueva versión
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
-      )
-    )
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys
+          .filter((key) => key !== PRECACHE_NAME && key !== RUNTIME_NAME)
+          .map((key) => caches.delete(key))
+      );
+      await self.clients.claim();
+    })()
   );
-  self.clients.claim();
 });
 
-// Estrategia: cache first, y si no está, va a la red y lo guarda
+// Estrategia:
+// - Navegación (HTML): cache-first con fallback a red, y actualiza la cache en segundo plano.
+// - Todo lo demás (assets propios, y también recursos de unpkg.com como el módulo
+//   dice-box, sus web workers y el .wasm de física): cache-first + se cachea en runtime
+//   la primera vez que se piden, así una vez que el usuario jugó una vez online con
+//   todos los temas/dados que use, quedan disponibles offline.
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  const { request } = event;
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
+  if (request.method !== "GET") return;
 
-      return fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200 && response.type === "basic") {
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
-          }
-          return response;
-        })
-        .catch(() => cached);
-    })
-  );
+  const url = new URL(request.url);
+
+  // Evitar interferir con peticiones que no queremos cachear (ej. analytics, si las hubiera).
+  if (url.protocol !== "http:" && url.protocol !== "https:") return;
+
+  if (request.mode === "navigate") {
+    event.respondWith(networkFirstForNavigation(request));
+    return;
+  }
+
+  event.respondWith(cacheFirstWithRuntimeCache(request));
 });
+
+async function networkFirstForNavigation(request) {
+  const cache = await caches.open(PRECACHE_NAME);
+  try {
+    const fresh = await fetch(request);
+    cache.put(request, fresh.clone());
+    return fresh;
+  } catch (err) {
+    const cached = await cache.match(request) || await cache.match("./index.html");
+    if (cached) return cached;
+    throw err;
+  }
+}
+
+async function cacheFirstWithRuntimeCache(request) {
+  const precache = await caches.open(PRECACHE_NAME);
+  const cachedPre = await precache.match(request);
+  if (cachedPre) return cachedPre;
+
+  const runtime = await caches.open(RUNTIME_NAME);
+  const cachedRuntime = await runtime.match(request);
+  if (cachedRuntime) return cachedRuntime;
+
+  try {
+    // no-cors permite cachear también recursos cross-origin (unpkg.com) aunque
+    // la respuesta sea "opaque" (no se puede inspeccionar, pero sí se puede servir offline).
+    const response = await fetch(request);
+    // Solo cacheamos respuestas válidas u opacas (opaque = cross-origin no-cors).
+    if (response && (response.ok || response.type === "opaque")) {
+      runtime.put(request, response.clone());
+    }
+    return response;
+  } catch (err) {
+    // Sin red y sin nada en cache: no hay nada más que hacer para este recurso.
+    throw err;
+  }
+}
