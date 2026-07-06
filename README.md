@@ -14,9 +14,17 @@ A physics-based 3D dice roller built for **Dungeons & Dragons 5e**, running enti
 - **Roll Type Picker** — when rolling from the Skills panel, choose Normal, Advantage, or Disadvantage on the fly
 - **Nat 1 / Nat 20** toast notification on single d20 rolls
 
-### Character Sheet (Skills Panel ⭐)
+### Character Sheet 👤
+- **Character Name** — the toughest decision
+- **Level** — determine your Hit Dice maximum
+- **HP/HP max** — edit your HP with -/+ buttons or add/subtract a specific ammount by clicking the number. Set your HP max also by clicking the number
+- **AC** — modify your AC with -/+ buttons
+- **Initiative** — modify your initiative mod. and click the number to roll a d20 + mod
+- **Speed** — modify your speed, click on "Speed" label to change to other types
+- **Passive Perception** — edit with -/+
+- **Proficiency Bonus** — this value is added automatically to your Saving Throws and your Skill Proficiencies
+- **Hit Dice** — your maximum Hit Dice it's determined by your level, you can change between d6, d8, d10 and d12, click de value to roll the dice type selected and add the result to you HP, one dice is discounted when doing this roll
 - **6 Ability Scores** — STR, DEX, CON, INT, WIS, CHA — with modifier auto-calculation
-- **Proficiency Bonus** — Set your PB and it will added automatically to your savings throws and your skills proficiencies
 - **Saving Throws** — roll any save directly; mark proficiency per ability
 - **18 D&D 5e Skills** — grouped by ability, with one-tap rolls; toggle **Proficiency** or **Expertise** per skill (modifier auto-applied)
 
