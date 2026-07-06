@@ -101,7 +101,7 @@ Then open `http://localhost:8080` in your browser.
 3. Tap **Roll** — watch the physics simulation settle, then read the result at the top
 4. Use **Advantage** or **Disadvantage** for quick 2d20 rolls
 5. Use **d100** for a percentile roll (d10 tens + d10 units)
-6. Open **⭐ Skills** to configure your character and roll directly from any ability, save, or skill
+6. Open **👤 Character Sheet** to configure your character and roll directly from any ability, save, or skill
 7. Open **🎲 Custom Rolls** to build and save reusable roll combinations
 8. Open **⚙️ Physics** or **🎨 Color** to personalize the experience
 9. Tap **Clear** to reset the table
