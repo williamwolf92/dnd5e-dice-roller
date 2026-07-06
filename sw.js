@@ -18,6 +18,11 @@ const PRECACHE_URLS = [
   "./assets/icon-maskable.png",
   "./assets/wood-bg.jpg",
   "./assets/nat-text.json",
+  "./engine/assets/ammo/ammo.wasm.wasm",
+  "./engine/dice-box.es.min.js",
+  "./engine/world.offscreen.min.js",
+  "./engine/world.onscreen.min.js",
+  "./engine/Dice.min.js",
   "./themes/smooth/diffuse-dark.png",
   "./themes/smooth/diffuse-light.png",
   "./themes/smooth/normal.png",
@@ -96,10 +101,7 @@ self.addEventListener("activate", (event) => {
 
 // Estrategia:
 // - Navegación (HTML): cache-first con fallback a red, y actualiza la cache en segundo plano.
-// - Todo lo demás (assets propios, y también recursos de unpkg.com como el módulo
-//   dice-box, sus web workers y el .wasm de física): cache-first + se cachea en runtime
-//   la primera vez que se piden, así una vez que el usuario jugó una vez online con
-//   todos los temas/dados que use, quedan disponibles offline.
+// - Todo lo demás (assets propios, y también recursos de unpkg.com como el módulo dice-box, sus web workers y el .wasm de física): cache-first + se cachea en runtime la primera vez que se piden, así una vez que el usuario jugó una vez online con todos los temas/dados que use, quedan disponibles offline.
 self.addEventListener("fetch", (event) => {
   const { request } = event;
 
@@ -141,8 +143,7 @@ async function cacheFirstWithRuntimeCache(request) {
   if (cachedRuntime) return cachedRuntime;
 
   try {
-    // no-cors permite cachear también recursos cross-origin (unpkg.com) aunque
-    // la respuesta sea "opaque" (no se puede inspeccionar, pero sí se puede servir offline).
+    // no-cors permite cachear también recursos cross-origin (unpkg.com) aunque la respuesta sea "opaque" (no se puede inspeccionar, pero sí se puede servir offline).
     const response = await fetch(request);
     // Solo cacheamos respuestas válidas u opacas (opaque = cross-origin no-cors).
     if (response && (response.ok || response.type === "opaque")) {

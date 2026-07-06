@@ -2238,7 +2238,7 @@
   </div>
 
   <script type="module">
-    import DiceBox from "https://unpkg.com/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
+    import DiceBox from "./engine/dice-box.es.min.js";
 
     const emptyMessage    = document.getElementById("empty-message");
     const resultPanel     = document.getElementById("result-panel");
@@ -2363,12 +2363,13 @@
 
     // ── DiceBox factory & init ────────────────────────────────────────────────
     const themeBase = new URL("themes/", window.location.href).href;
+    const engineOrigin = new URL("engine/", window.location.href).href;
     
     function makeDiceBox() {
       return new DiceBox({
         container: "#dice-box",
         assetPath: "assets/",
-        origin:    "https://unpkg.com/@3d-dice/dice-box@1.1.4/dist/",
+        origin:    engineOrigin,
         theme:     diceSettings.theme || "smooth",
         externalThemes: {
           amber:      themeBase + "amber/",
