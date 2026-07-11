@@ -1,4 +1,4 @@
-# 🎲 D&D Dice Roller ![GitHub license](https://img.shields.io/badge/license-MIT-blue) ![version](https://img.shields.io/badge/version-2.0-green)
+# 🎲 D&D 5e Dice Roller ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 
 A physics-based 3D dice roller built for **Dungeons & Dragons 5e**, running entirely in the browser with no backend required. Designed for mobile-first use, with a warm tabletop aesthetic and a full D&D character sheet integration.
 
@@ -14,17 +14,9 @@ A physics-based 3D dice roller built for **Dungeons & Dragons 5e**, running enti
 - **Roll Type Picker** — when rolling from the Skills panel, choose Normal, Advantage, or Disadvantage on the fly
 - **Nat 1 / Nat 20** toast notification on single d20 rolls
 
-### Character Sheet 👤
-- **Character Name** — the toughest decision
-- **Level** — determine your Hit Dice maximum
-- **HP/HP max** — edit your HP with -/+ buttons or add/subtract a specific ammount by clicking the number. Set your HP max also by clicking the number
-- **AC** — modify your AC with -/+ buttons
-- **Initiative** — modify your initiative mod. and click the number to roll a d20 + mod
-- **Speed** — modify your speed, click on "Speed" label to change to other types
-- **Passive Perception** — edit with -/+
-- **Proficiency Bonus** — this value is added automatically to your Saving Throws and your Skill Proficiencies
-- **Hit Dice** — your maximum Hit Dice it's determined by your level, you can change between d6, d8, d10 and d12, click de value to roll the dice type selected and add the result to you HP, one dice is discounted when doing this roll
+### Character Sheet (Skills Panel ⭐)
 - **6 Ability Scores** — STR, DEX, CON, INT, WIS, CHA — with modifier auto-calculation
+- **Proficiency Bonus** — Set your PB and it will added automatically to your savings throws and your skills proficiencies
 - **Saving Throws** — roll any save directly; mark proficiency per ability
 - **18 D&D 5e Skills** — grouped by ability, with one-tap rolls; toggle **Proficiency** or **Expertise** per skill (modifier auto-applied)
 
@@ -32,6 +24,10 @@ A physics-based 3D dice roller built for **Dungeons & Dragons 5e**, running enti
 - Save named roll combinations (dice + modifier) for quick reuse
 - Launch a saved roll directly from the panel
 - Delete individual entries; list persists across sessions
+
+### History 📋
+- List of last 10 rolls you made with roll detail included
+- Clear button to delete entries
 
 ### Physics & Appearance
 - **Physics panel ⚙️** — tweak dice size (Small / Medium / Large), gravity, friction, bounce, light intensity, and shadows
@@ -41,6 +37,9 @@ A physics-based 3D dice roller built for **Dungeons & Dragons 5e**, running enti
 
 ### Persistence
 - All state (dice counts, modifier, ability scores, proficiencies, custom rolls, physics settings, dice color) is automatically saved to **localStorage** and restored on next visit
+
+### Saving Data
+- You can save your Character Sheet and Custom Rolls data. A JSON file will be automatically saved to your Downloads folder, which you can later load to recover all data in case you lose or accidentally modify it.
 
 ---
 
@@ -101,7 +100,8 @@ Then open `http://localhost:8080` in your browser.
 3. Tap **Roll** — watch the physics simulation settle, then read the result at the top
 4. Use **Advantage** or **Disadvantage** for quick 2d20 rolls
 5. Use **d100** for a percentile roll (d10 tens + d10 units)
-6. Open **👤 Character Sheet** to configure your character and roll directly from any ability, save, or skill
+6. Open **⭐ Skills** to configure your character and roll directly from any ability, save, or skill
 7. Open **🎲 Custom Rolls** to build and save reusable roll combinations
-8. Open **⚙️ Physics** or **🎨 Color** to personalize the experience
-9. Tap **Clear** to reset the table
+8. Open **📋 History** to see the last 10 rolls you made
+9. Open **⚙️ Physics** or **🎨 Color** to personalize the experience
+10. Tap **Clear** to reset the table
