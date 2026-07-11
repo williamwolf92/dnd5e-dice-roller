@@ -491,6 +491,30 @@
     background-color: #d5cab8;
   }
 
+  .modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .modal-icon-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background-color: #e8e0d4;
+    color: #3a3a3a;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+
+  .modal-icon-btn:active {
+    background-color: #d5cab8;
+  }
+
   .modal-body {
     flex: 1;
     overflow-y: auto;
@@ -1760,7 +1784,12 @@
     <div class="modal-box">
       <div class="modal-header">
         <span class="modal-title">👤 Character Sheet</span>
-        <button class="modal-close" data-modal="skills-modal">✕</button>
+        <div class="modal-header-actions">
+          <button class="modal-icon-btn" id="char-export-btn" title="Export data">💾</button>
+          <button class="modal-icon-btn" id="char-import-btn" title="Import data">📁</button>
+          <input type="file" id="char-import-file" accept="application/json,.json" style="display:none;">
+          <button class="modal-close" data-modal="skills-modal">✕</button>
+        </div>
       </div>
       <div class="modal-body">
 
@@ -2218,8 +2247,10 @@
     <div class="modal-box">
       <div class="modal-header">
         <span class="modal-title">📋 Roll History</span>
-        <button id="hist-clear-btn">Clear</button>
-        <button class="modal-close" data-modal="history-modal">✕</button>
+        <div class="modal-header-actions">
+          <button id="hist-clear-btn">Clear</button>
+          <button class="modal-close" data-modal="history-modal">✕</button>
+        </div>
       </div>
       <div class="modal-body">
         <div id="hist-list"></div>
@@ -3364,6 +3395,127 @@
       document.getElementById("cr-mod-value").textContent = "0";
       renderCustomRolls();
       saveState();
+    });
+
+    // ── Import / Export Character Data ──────────────────────────────────────
+    function exportCharacterData() {
+      const data = {
+        type: "dnd-dice-roller-character",
+        version: 1,
+        charName,
+        charLevel,
+        hp,
+        hpMax,
+        ac,
+        initiative,
+        speedValues,
+        activeSpeedLabel,
+        passivePerception,
+        profBonus,
+        hitDiceType,
+        hitDiceCurrent,
+        abilityScores,
+        saveProficient,
+        skillProficiency,
+        customRolls,
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url  = URL.createObjectURL(blob);
+      const safeName = (charName || "character").trim().replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "character";
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `dnd-${safeName}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function applyImportedCharacterData(data) {
+      if (!data || typeof data !== "object") {
+        alert("Invalid file: no valid data found.");
+        return;
+      }
+
+      if (typeof data.charName === "string") charName = data.charName;
+      if (Number.isFinite(data.charLevel) && data.charLevel >= 1) charLevel = data.charLevel;
+      if (Number.isFinite(data.hp)) hp = data.hp;
+      if (Number.isFinite(data.hpMax)) hpMax = data.hpMax;
+      if (Number.isFinite(data.ac)) ac = data.ac;
+      if (Number.isFinite(data.initiative)) initiative = data.initiative;
+      if (data.speedValues && typeof data.speedValues === "object") {
+        SPEED_LABELS.forEach(label => {
+          if (Number.isFinite(data.speedValues[label])) speedValues[label] = data.speedValues[label];
+        });
+      }
+      if (SPEED_LABELS.includes(data.activeSpeedLabel)) activeSpeedLabel = data.activeSpeedLabel;
+      if (Number.isFinite(data.passivePerception)) passivePerception = data.passivePerception;
+      if (PROF_BONUS_VALUES.includes(data.profBonus)) profBonus = data.profBonus;
+      if (HITDICE_TYPES.includes(data.hitDiceType)) hitDiceType = data.hitDiceType;
+      if (Number.isFinite(data.hitDiceCurrent)) hitDiceCurrent = data.hitDiceCurrent;
+
+      if (data.abilityScores && typeof data.abilityScores === "object") {
+        ABILITIES.forEach(a => {
+          if (Number.isFinite(data.abilityScores[a])) abilityScores[a] = data.abilityScores[a];
+        });
+      }
+      if (data.saveProficient && typeof data.saveProficient === "object") {
+        ABILITIES.forEach(a => { saveProficient[a] = !!data.saveProficient[a]; });
+      }
+      if (data.skillProficiency && typeof data.skillProficiency === "object") {
+        SKILLS.forEach(s => {
+          const val = data.skillProficiency[s.id];
+          skillProficiency[s.id] = (val === "P" || val === "E") ? val : null;
+        });
+      }
+      if (Array.isArray(data.customRolls)) {
+        customRolls = data.customRolls.filter(
+          r => r && typeof r.name === "string" && r.counts && typeof r.modifier === "number"
+        );
+      }
+
+      clampHitDice();
+
+      // Re-render everything affected
+      ABILITIES.forEach(renderAbility);
+      SKILLS.forEach(s => updateSkillToggleUI(s.id));
+      renderCharName();
+      renderCharLevel();
+      renderHP();
+      renderAC();
+      renderInitiative();
+      renderSpeed();
+      renderPassivePerception();
+      renderHitDice();
+      renderProfBonus();
+      document.querySelectorAll(".save-prof-checkbox").forEach(chk => {
+        chk.checked = !!saveProficient[chk.dataset.ability];
+      });
+      renderCustomRolls();
+
+      saveState();
+    }
+
+    document.getElementById("char-export-btn").addEventListener("click", exportCharacterData);
+
+    document.getElementById("char-import-btn").addEventListener("click", () => {
+      document.getElementById("char-import-file").click();
+    });
+
+    document.getElementById("char-import-file").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          applyImportedCharacterData(data);
+        } catch (err) {
+          alert("Could not import file: invalid format.");
+        }
+        e.target.value = "";
+      };
+      reader.readAsText(file);
     });
   </script>
   <script>
