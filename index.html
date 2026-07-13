@@ -1411,6 +1411,12 @@
     border: 1px solid #e6ddcf;
     border-radius: 10px;
     padding: 5px 10px;
+    cursor: default;
+    touch-action: manipulation;
+  }
+
+  .cr-roll-item:active {
+    background-color: #f5efe6;
   }
 
   .cr-info {
@@ -1436,25 +1442,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .cr-launch-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: none;
-    background-color: #2b2b2b;
-    color: #ffffff;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    touch-action: manipulation;
-    flex-shrink: 0;
-  }
-
-  .cr-launch-btn:active {
-    background-color: #444444;
   }
 
   .cr-delete-btn {
@@ -3418,21 +3405,21 @@
       customRolls.forEach((roll, idx) => {
         const item = document.createElement("div");
         item.className = "cr-roll-item";
+        item.dataset.idx = idx;
         const desc = crDescribe(roll.counts, roll.modifier);
         item.innerHTML = `
           <div class="cr-info">
             <div class="cr-roll-name">${roll.name}</div>
             <div class="cr-roll-sub">${desc}</div>
           </div>
-          <button class="cr-launch-btn" data-idx="${idx}">🎲</button>
           <button class="cr-delete-btn" data-idx="${idx}">✕</button>
         `;
         list.appendChild(item);
       });
 
-      list.querySelectorAll(".cr-launch-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const roll     = customRolls[+btn.dataset.idx];
+      list.querySelectorAll(".cr-roll-item").forEach(item => {
+        item.addEventListener("click", () => {
+          const roll     = customRolls[+item.dataset.idx];
           if (!roll || !ready) return;
           const notation = buildNotation(roll.counts);
           if (notation.length === 0) return;
@@ -3448,7 +3435,8 @@
       });
 
       list.querySelectorAll(".cr-delete-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
           customRolls.splice(+btn.dataset.idx, 1);
           renderCustomRolls();
           saveState();
